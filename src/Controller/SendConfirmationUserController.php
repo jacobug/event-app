@@ -15,7 +15,7 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 class SendConfirmationUserController extends AbstractController
 {
-    #[Route('/send/confirmation/user', name: 'app_send_confirmation_user')]
+    #[Route('/send/confirmation', name: 'app_send_confirmation')]
     public function index(MailerInterface $mailer, Request $request, EntityManagerInterface $manager): Response
     {
         $event = $manager->getRepository(Event::class)->findOneBy([

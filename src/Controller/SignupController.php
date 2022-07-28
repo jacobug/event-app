@@ -10,9 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Form\SignupFormType;
 use App\Entity\Person;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Serializer\Exception\UnsupportedException;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class SignupController extends AbstractController
 {
@@ -51,16 +49,35 @@ class SignupController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
+            $session = new Session();
+            
             $userEmail = $form->get('email')->getData();
 
             foreach ($event->getPersons() as $person){
                 if($person->getEmail() === $userEmail){
-                    throw new UnsupportedException("Person registered for this event", 400);    
+                    $session->getFlashBag()->add(
+                    'error',
+                    'Provided email is already subscribed for this event.'
+                );
+                    return $this->renderForm('signup/index.html.twig', [
+                        'form' => $form,
+                        'event' => $event,
+                        'eventId' => $id,
+                    ]);   
                 }
             }
 
             if ($event->getPersons()->count() === $event->getMaxLimit()){
-                throw new UnsupportedException("Limit is reached", 400);
+                $session->getFlashBag()->add(
+                    'error',
+                    'The limit for this event has been reached.'
+                );
+
+                return $this->renderForm('signup/index.html.twig', [
+                    'form' => $form,
+                    'event' => $event,
+                    'eventId' => $id,
+                ]);
             }
             
             $attendee = new Person();
@@ -70,18 +87,15 @@ class SignupController extends AbstractController
             $manager->persist($attendee);
             $manager->flush();
 
-            return $this->redirectToRoute('app_send_confirmation_user', [
+            return $this->redirectToRoute('app_send_confirmation', [
                 'eventId' => $event->getId(),
                 'userId' => $attendee->getId(),
             ]);
         }
-        
-        $result = 'success';
 
         return $this->renderForm('signup/index.html.twig', [
             'form' => $form,
             'event' => $event,
-            'result' => $result,
         ]);
     }
 }

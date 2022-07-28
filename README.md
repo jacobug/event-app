@@ -18,6 +18,11 @@ composer install
 ```
 php bin/console doctrine:migrations:migrate
 ```
+5. Run Symfony
+```
+symfony server:start
+```
+**_Symfony CLI required_**
 
 ### Sample data
 ```
@@ -27,20 +32,20 @@ php bin/console doctrine:fixtures:load
 ## Routes
 
 __[ GET ]__
-/signup
-/list/attendees
-/list/events
+* /signup/{id}
+* /list/attendees
+* /list/events
 
 __[ POST ]__
-/signup
-/send/confirmation/user
+* /signup/{id}
+* /send/confirmation
 
 
 ## Notes
 
 * Mailcatcher webmail: http://localhost:1080
 
-* Consume queued massages
+* Sending queued massages asynchronously 
 ``` 
 php bin/console messenger:consume async
 ```

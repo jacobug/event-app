@@ -3,6 +3,13 @@
 {% block title %}Hello - Go to Event!{% endblock %}
 
 {% block body %}
+
+{% for flashMessage in app.session.flashbag.get('error') %}
+
+    <div class="alert alert-danger">{{ flashMessage }}</div>
+
+{% endfor %}
+
 <div class="col-4 ms-4">
 <h1>Reserve a seat</h1>
 
@@ -12,8 +19,6 @@
 {% endif %}
 
 {{ form(form) }}
-
-{{ result ?? '' }}
 
 </div>
 
