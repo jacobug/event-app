@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Webinar - Register Now{% endblock %}
+
+{% block body %}
+<style>
+    .box { padding: 8px; border: 1px #000000 solid; margin: 12px 0px; }
+    .box-event { background: #efefef; }
+    .
+</style>
+
+<div class="col ms-4">
+    <h1>Webinar - Upcoming events</h1>
+
+    {% if events %}
+    {% for event in events %}
+    <div class="box box-event col-6 d-flex">
+        <div class="col-6">
+            <h2> {{ event.title }}</h2>
+            <p> {{ event.eventdate|date("Y-m-d H:i:s") }}</p>
+        </div>
+        <div class="col-6 d-inline-flex justify-content-end align-self-center">
+            <a href="/signup/{{ event.id }}" class="btn btn-primary btn-webinar">Go to!</a>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="alert alert-secondary">No events found!</div>
+    {% endif %}
+
+</div>
+{% endblock %}
