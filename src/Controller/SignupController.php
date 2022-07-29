@@ -11,15 +11,19 @@ use App\Form\SignupFormType;
 use App\Entity\Person;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SignupController extends AbstractController
 {
-    #[Route('/signup/{id}', methods: ['GET'], name: 'app_signup')]
+    #[Route('/signup/{id}', methods: ['GET'], name: 'app_signup', requirements: ['id' => '\d+'])]
     public function index(int $id, Request $request, EntityManagerInterface $manager): Response
     {
         $event = $manager->getRepository(Event::class)->findOneBy([
             'id' => $id,
         ]);
+
+        if (empty($event))
+            throw new NotFoundHttpException('Event does not exists', null,  404);
 
         $person = new Person();
 
