@@ -27,7 +27,7 @@ class SendConfirmationUserController extends AbstractController
         
 
         $confirmation = (new Email())
-            ->from($event->getHostEmail())
+            ->from('Webinars.com <no-reply@webinars.com>')
             ->to($attendee->getEmail())
             ->subject('Welcome on the Webinar')
             ->bcc($event->getHostEmail())
